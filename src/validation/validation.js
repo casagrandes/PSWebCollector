@@ -1,6 +1,5 @@
 const Joi = require('@hapi/joi');
 
-
 // Registration Validation
 const registerValidation = (data) => {
   const schema = {
@@ -17,9 +16,9 @@ const registerValidation = (data) => {
       .required()
       .email({ minDomainSegments: 2 }),
     password: Joi.string()
-      .regex(/^[a-zA-Z0-9]{3,30}$/)
+      .regex(/^[a-zA-Z0-9]{3,30}$/),
   };
-  return Joi.validate(data, schema);
+  return Joi.any().validate(data, schema);
 };
 
 // Login Validation
@@ -33,7 +32,7 @@ const loginValidation = (data) => {
       .regex(/^[a-zA-Z0-9]{3,30}$/)
       .min(6)
   };
-  return Joi.validate(data, schema);
+  return Joi.any().validate(data, schema);
 };
 
 // TODO - add validation for api calls

@@ -15,10 +15,15 @@ const PORT = process.env.SERVER_PORT || 5000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Logger
+// Logger - basic to console
 app.use(logger('dev'));
+// Log all req to access.log
+app.use(logger('short', {
+  stream: fs.createWriteStream(path.join(__dirname, '../api.log'), { flags: 'a' })
+}))
 
 // Routes
+app.use('/api/user/', require('./routes/authRoute'));
 app.use('/api/computers', require('./routes/computerRoute'));
 app.use('/api/users', require('./routes/userRoute'));
 

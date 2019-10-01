@@ -39,7 +39,7 @@ router.get('/os/:os', async (req, res, next) => {
 
 
 router.post('/', async (req, res, next) => {
-  // console.log(req.body);
+  console.log(req.body);
   const newComputerData = req.body;
   const newComputer = await computerController.addComputer(newComputerData);
   res.json(newComputer);

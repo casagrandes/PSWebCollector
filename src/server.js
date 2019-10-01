@@ -23,8 +23,10 @@ app.use(logger('short', {
 }))
 
 // Routes
-app.use('/api/user/', require('./routes/authRoute'));
+app.use('/api/user', require('./routes/authRoute'));
 app.use('/api/computers', require('./routes/computerRoute'));
 app.use('/api/users', require('./routes/userRoute'));
+app.use('/api/keys', require('./routes/apiKeyRoute'));
+app.use('/api/ps', require('./routes/psEventRoute'));
 
 app.listen(PORT, console.log(`Server started on port: ${PORT}`))

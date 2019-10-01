@@ -4,10 +4,11 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const { registerValidation, loginValidation } = require('../validation/validation');
+// const authMiddleware = require('../common/middlewares/auth.validation');
 
 router.post('/register', async (req, res) => {
   // Validate data before making user
-  const { error } = registerValidation(req.body);
+  const { error } = await registerValidation(req.body);
   if (error)return res.status(400).send(error.details[0].message);
 
   // Check if user is already in the DB
@@ -22,7 +23,7 @@ router.post('/register', async (req, res) => {
   // Create a new user
   const { firstName, lastName, email } = req.body;
   console.log(`creating a new user: name=${firstName} ${lastName} email=${email}`);
-
+  // permission is defaulted to 1
   try {
     const savedUser = await User.create({
       firstName: firstName,
@@ -32,7 +33,7 @@ router.post('/register', async (req, res) => {
     });
     return res.status(201).json({
       error: false,
-      data: savedUser.email,
+      id: savedUser.id,
       message: 'New User has been created.'
     });
   } catch (err) {
@@ -43,12 +44,14 @@ router.post('/register', async (req, res) => {
 
 // LOGIN
 router.post('/login', async (req, res) => {
-  // Validate data before making user
-  const { error } = loginValidation(req.body);
+  // Validate data before trying to login user
+  const { error } = await loginValidation(req.body);
   if (error)return res.status(400).send(error.details[0].message);
 
-  // Check if email exists
-  const user = await User.findOne({where: {email: req.body.email}});
+  // Check if email exists;
+  const email = req.body.email;
+  const query = User.where({ email: email });
+  const user = await query.findOne();
   if(!user) return (
     console.log('user does not exist'),
     res.status(400).send('Email or password is incorrect')
@@ -63,9 +66,13 @@ router.post('/login', async (req, res) => {
   } else {
     console.log('Successfully Authenticated');
     // Create and assign a token
-    const token = jwt.sign({id: user.id}, process.env.TOKEN_SECRET);
-    res.header('authtoken', token).status(200).json({ authtoken: token});
+    const token = jwt.sign({
+      user_id: user.id
+    }, process.env.TOKEN_SECRET, {expiresIn: '1h'});
+    res.header('accessToken', token).status(201).json({ accessToken: token});
   };
+  
+  
 });
 
 module.exports = router;

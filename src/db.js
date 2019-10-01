@@ -4,6 +4,7 @@ const dbName = process.env.DB_NAME || 'psapidev'
 const uri = `mongodb://${process.env.DB_HOST}/${dbName}`
 const options = {
   useNewUrlParser: true,
+  useFindAndModify: false,
   useCreateIndex: true,
   poolSize: 10,
   connectTimeoutMS: 10000,

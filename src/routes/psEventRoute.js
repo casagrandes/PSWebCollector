@@ -15,7 +15,7 @@ router.post('/add', async (req, res, next) => {
     const valiError = await psAddValidation(req.body);
     console.log(valiError);
     const computerToAdd = await computerController.addComputer(computerData);
-    res.status(201).json(computerToAdd);
+    res.status(201).json({error: false, saved: true, data: {computerToAdd}});
   } else {
     console.log(keyAuthed);
     res.status(400).json(error);

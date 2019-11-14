@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const Cors = require('cors');
 const logger = require('morgan');
 const fs = require('fs');
 const path = require('path');
@@ -12,6 +13,7 @@ const app = express();
 const PORT = process.env.SERVER_PORT || 5000;
 
 // Middleware
+app.use(Cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
